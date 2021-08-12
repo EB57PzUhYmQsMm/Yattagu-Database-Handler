@@ -1,0 +1,22 @@
+  <html>
+  <header>
+    <script type="text/javascript" src="js/security/encryption/encrypter-decrypter.js"></script>
+  </header>
+  <body>
+    <textarea style="width: 500; height: 100; font-size: 15; text-align: center;" readonly id="display1" placeholder="VALUES WILL BE DISPLAYED HERE">
+    VALUES WILL BE DISPLAYED HERE
+    </textarea>
+    <br>
+    <input type='text' placeholder='Cipher Text' id='ciphertext'>
+    <input type='text' placeholder='Encryption Key' id='key'>
+    <button onclick='document.getElementById("display1").innerText = crypt.encrypt(document.getElementById("ciphertext").value, document.getElementById("key").value);'>Encrypt</button>
+    <br>
+    <br>
+    <textarea style="width: 500; height: 100; font-size: 15; text-align: center;" readonly id="display2" placeholder="VALUES WILL BE DISPLAYED HERE">
+    VALUES WILL BE DISPLAYED HERE
+    </textarea>
+    <br>
+    <input type='text' placeholder='Plain Text' id='encryptedtext'>
+    <input type='text' placeholder='Encryption Key' id='key2'>
+    <button onclick='document.getElementById("display2").innerText = crypt.decrypt(document.getElementById("encryptedtext").value, document.getElementById("key2").value);'>Decrypt</button>
+</html>
