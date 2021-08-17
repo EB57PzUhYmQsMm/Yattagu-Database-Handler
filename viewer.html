@@ -1,0 +1,33 @@
+<html>
+  <header>
+    <title>YTG-DB</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+  </header>
+  <body>
+    <h2 id="db_name" style="text-align: center;">Database Name</h2>
+    <br>
+<p id="tables">tables</p>
+<p id="name">name</p>
+<p id="columns">columns</p>
+<p id="rows">rows</p>
+    <br>
+    <br>
+    <footer></footer>
+  </body>
+<script>
+var url = new URL(window.location.href);
+var db_data = url.searchParams.get("db_data");
+
+var db_name = db_data.split('|||||||')[0]
+var db_tables = db_data.split('|||||||')[1]
+var table = db_tables.split('||||||')[0]
+var table_name = table.split('||||')[0]
+var columns = table.split('||||')[1].split('///////')[0]
+var rows = table.split('||||')[1].split('///////')[1]
+document.getElementById('db_name').innerText = db_name
+document.getElementById('name').innerText = table_name
+document.getElementById('tables').innerText = db_tables
+document.getElementById('columns').innerText = columns
+document.getElementById('rows').innerText = rows
+</script>
+</html>
