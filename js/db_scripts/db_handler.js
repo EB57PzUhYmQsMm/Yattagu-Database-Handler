@@ -170,7 +170,7 @@ if (typeof module !== 'undefined') {
   module.exports = saveAs;
 }
 
-var template_blob = "|||||||sample_table||||1||column_1||string||3600|||2||column_2||int||120|||3||column_3||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false"
+var template_blob = "|||||||sample_table||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false"
 
 function create_db(dbname) {
   var blob = new Blob([dbname+template_blob],
