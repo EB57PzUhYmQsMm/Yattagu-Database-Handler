@@ -170,10 +170,10 @@ if (typeof module !== 'undefined') {
   module.exports = saveAs;
 }
 
-var template_blob = "|||||||sample_table||||1||column_1||string||3600|||2||column_2||int||120|||3||column_3||bool||0///////1|gamer|69|true//////2|ninja|[nil]|false"
+var template_blob = "|||||||sample_table||||1||column_1||string||3600|||2||column_2||int||120|||3||column_3||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false"
 
 function create_db(dbname) {
-  var blob = new Blob([dbname+"|||||||sample_table||||1||column_1||string||3600|2||column_2||int||120|||3||column_3||bool||0|||||1|gamer|69|true|||||2|ninja|[nil]|false"],
+  var blob = new Blob([dbname+template_blob],
     { type: "text/plain;charset=utf-8" });
             saveAs(blob, dbname+".txt");
 }
