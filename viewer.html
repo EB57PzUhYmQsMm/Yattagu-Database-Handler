@@ -2,14 +2,33 @@
   <header>
     <title>YTG-DB</title>
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    <style>
+    th {
+    background-color: #808080;
+    color: black;
+    }
+    td {
+    background-color: white;
+    }
+    </style>
   </header>
   <body>
     <h2 id="db_name" style="text-align: center;">Database Name</h2>
     <br>
-<p id="tables">tables</p>
-<p id="name">name</p>
-<p id="columns">columns</p>
-<p id="rows">rows</p>
+<div id="main" style="position: absolute; top: 0px; left: 0px; height: 1000px; overflow: none;">
+<div id="tables_div" style="position: absolute; top: 150px; left: 00px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="db_name_title" style="text-align: center;">Database Tables</h2><ul id="tables_list"></ul></div>
+<div id="table_data_div" style="position: absolute; top: 150px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="table_name_title" style="text-align: center;">Table_Name Data</h2>
+<table style="width: 100%;">
+<tr><th style="">test_column_1</th><th>test_column_2</th><th>test_column_3</th></tr>
+<tr>
+<td>coolstring</td>
+<td>68.99</td>
+<td>false</td>
+</tr>
+</table>
+</div>
+<div id="table_data_settings_div" style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 style="text-align: center;">Configure Row</h2></div>
+</div>
     <br>
     <br>
     <footer></footer>
@@ -19,15 +38,20 @@ var url = new URL(window.location.href);
 var db_data = url.searchParams.get("db_data");
 
 var db_name = db_data.split('|||||||')[0]
-var db_tables = db_data.split('|||||||')[1]
-var table = db_tables.split('||||||')[0]
-var table_name = table.split('||||')[0]
-var columns = table.split('||||')[1].split('///////')[0]
-var rows = table.split('||||')[1].split('///////')[1]
+var db_tables = db_data.split('|||||||')[1].split('||||||')
+var first_table_data = db_tables[0].split('||||')
+var table_listings = document.getElementById('tables_list')
 document.getElementById('db_name').innerText = db_name
-document.getElementById('name').innerText = table_name
-document.getElementById('tables').innerText = db_tables
-document.getElementById('columns').innerText = columns
-document.getElementById('rows').innerText = rows
+document.getElementById('db_name_title').innerText = db_name+" Tables"
+document.getElementById('table_name_title').innerText = table_name+" Data"
+for (var i = 0; i < db_tables.length; i++) {
+    var table_name = db_tables[i].split('||||')[0]
+    var table_listing = document.createElement("li")
+    table_listings.appendChild(table_listing)
+    table_listing.innerHTML = "<p onclick=''>"+table_name+"</p>"
+}
+for (var i = 0; i < first_table_data[1].length; i++) {
+    console.log(first_table_data[1].split(' ')[i])
+}
 </script>
 </html>
