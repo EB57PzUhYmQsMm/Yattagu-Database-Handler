@@ -48,6 +48,26 @@
     }
 
     .table_listing {}
+
+    .accept_confirmation {
+        width: 50;
+        height: 50;
+    }
+
+    .accept_confirmation:hover {
+        width: 55px;
+        height: 55px;
+    }
+
+    .deny_confirmation {
+        width: 50;
+        height: 50;
+    }
+
+    .deny_confirmation:hover {
+        width: 55px;
+        height: 55px;
+    }
     </style>
   </head>
   <body>
@@ -81,12 +101,44 @@ document.getElementById('db_name').innerText = db_name
 document.getElementById('db_name_title').innerText = db_name+" Tables"
 document.getElementById('table_name_title').innerText = first_table_data[0]+" Data"
 
+function confirm_action(fnc, param1, param2, param3, param4, param5) {
+    var new_div = document.createElement('div');
+new_div.id = "action_confirmation_div"
+    new_div.style = "position: fixed; top: 20%; left: 40%; width: 300px; height: 200px; background-color: #D3D3D3; border-style: solid;"
+    document.body.appendChild(new_div);
+var new_title = document.createElement('h2')
+var new_confirmation = document.createElement('p')
+var new_yes = document.createElement('img')
+var new_no = document.createElement('img')
+new_div.appendChild(new_title)
+new_title.innerText = 'Confirm Action'
+new_title.style = "text-align: center;"
+new_div.appendChild(new_confirmation)
+new_confirmation.innerText = fnc+'('+param1+', '+param2+', '+param3+', '+param4+', '+param5+')'
+new_confirmation.style = "text-align: center; background-color: white; font-weight: bold;"
+new_div.appendChild(new_yes)
+new_yes.style = "position: absolute; top: 130px; left: 20%;"
+new_yes.classList.add("accept_confirmation")
+new_yes.src = 'assets/images/sprites/checkmark_circle_green.png'
+new_div.appendChild(new_no)
+new_no.style = "position: absolute; top: 130px; left: 60%;"
+new_no.classList.add("deny_confirmation")
+new_no.src = 'assets/images/sprites/x_circle_red.png'
+new_yes.addEventListener('click', function(){
+        var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
+        window[fnc](param1, param2, param3, param4, param5);
+    });
+new_no.addEventListener('click', function(){
+        var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
+    });
+}
+
 function configure_table(table) {
     document.getElementById('configure_div_title').innerText = 'Configure '+table
 }
 
-function remove_table() {
-    console.log('test')
+function remove_table(table) {
+    alert('deleting table')
 }
 
 // tables
@@ -114,7 +166,7 @@ for (var i = 1; i < db_tables.length; i++) {
         configure_table(table_name);
     });
     new_remove_img.addEventListener('click', function(){
-        remove_table();
+        confirm_action("remove_table");
     });
 }
 }
