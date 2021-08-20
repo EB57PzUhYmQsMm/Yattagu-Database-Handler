@@ -1,200 +1,211 @@
 <html>
-  <head>
+
+<head>
     <title>YTG-DB</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    </link>
     <script type="text/javascript" src="js/db_scripts/db_handler.js"></script>
     <style>
-    th {
-        background-color: #808080;
-        color: black;
-    }
+        th {
+            background-color: #808080;
+            color: black;
+        }
 
-    td {
-        background-color: white;
-    }
+        td {
+            background-color: white;
+        }
 
-    .configure_table {
-        position: relative;
-        top: 0px;
-        left: 0px;
-    }
+        .configure_table {
+            position: relative;
+            top: 0px;
+            left: 0px;
+        }
 
-    .configure_table:hover {
-        font-weight: bold;
-        width: 1.01em;
-        height: 1.01em;
-    }
+        .configure_table:hover {
+            font-weight: bold;
+            width: 1.01em;
+            height: 1.01em;
+        }
 
-    .remove_table {
-        position: relative;
-        top: 0px;
-        left: 3px;
-    }
-    
-    .remove_table:hover {
-        font-weight: bold;
-        width: 1.01em;
-        height: 1.01em;
-    }
+        .remove_table {
+            position: relative;
+            top: 0px;
+            left: 3px;
+        }
 
-    .table_listing_text {
-        position: relative;
-        top: -33px;
-        left: 40px;
-    }
-    
-    .table_listing_text:hover {
-        font-weight: bold;
-    }
+        .remove_table:hover {
+            font-weight: bold;
+            width: 1.01em;
+            height: 1.01em;
+        }
 
-    .table_listing {}
+        .table_listing_text {
+            position: relative;
+            top: -33px;
+            left: 40px;
+        }
 
-    .accept_confirmation {
-        width: 50;
-        height: 50;
-    }
+        .table_listing_text:hover {
+            font-weight: bold;
+        }
 
-    .accept_confirmation:hover {
-        width: 55px;
-        height: 55px;
-    }
+        .table_listing {}
 
-    .deny_confirmation {
-        width: 50;
-        height: 50;
-    }
+        .accept_confirmation {
+            width: 50;
+            height: 50;
+        }
 
-    .deny_confirmation:hover {
-        width: 55px;
-        height: 55px;
-    }
+        .accept_confirmation:hover {
+            width: 55px;
+            height: 55px;
+        }
+
+        .deny_confirmation {
+            width: 50;
+            height: 50;
+        }
+
+        .deny_confirmation:hover {
+            width: 55px;
+            height: 55px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <h2 id="db_name" style="text-align: center;">Database Name</h2>
     <br>
-<div id="main" style="position: absolute; top: 0px; left: 0px; height: 1000px; overflow: none;">
-<div id="tables_div" style="position: absolute; top: 150px; left: 00px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="db_name_title" style="text-align: center;">Database Tables</h2><ul id="tables_list"></ul></div>
-<div id="table_data_div" style="position: absolute; top: 150px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="table_name_title" style="text-align: center;">Table_Name Data</h2>
-<table id="table_data_table" style="width: 100%;">
-<tr id="table_data_table_columns">
-</tr>
-</table>
-</div>
-<div id="table_data_settings_div" style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="configure_div_title" style="text-align: center;">Configure</h2></div>
-</div>
+    <div id="main" style="position: absolute; top: 0px; left: 0px; height: 1000px; overflow: none;">
+        <div id="tables_div"
+            style="position: absolute; top: 150px; left: 00px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            <h2 id="db_name_title" style="text-align: center;">Database Tables</h2>
+            <ul id="tables_list"></ul>
+        </div>
+        <div id="table_data_div"
+            style="position: absolute; top: 150px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            <h2 id="table_name_title" style="text-align: center;">Table_Name Data</h2>
+            <table id="table_data_table" style="width: 100%;">
+                <tr id="table_data_table_columns">
+                </tr>
+            </table>
+        </div>
+        <div id="table_data_settings_div"
+            style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            <h2 id="configure_div_title" style="text-align: center;">Configure</h2>
+        </div>
+    </div>
     <br>
     <br>
     <footer></footer>
-  </body>
+</body>
 <script>
-var url = new URL(window.location.href);
-var db_data = url.searchParams.get("db_data");
+    var url = new URL(window.location.href);
+    var db_data = url.searchParams.get("db_data");
 
-var db_name = db_data.split('|||||||')[0]
-var db_tables = db_data.split('|||||||')
-var first_table_data = db_tables[1].split('||||')
-var table_listings = document.getElementById('tables_list')
-var table_data_table = document.getElementById('table_data_table')
-var table_data_table_columns = document.getElementById('table_data_table_columns')
-document.getElementById('db_name').innerText = db_name
-document.getElementById('db_name_title').innerText = db_name+" Tables"
-document.getElementById('table_name_title').innerText = first_table_data[0]+" Data"
+    var db_name = db_data.split('|||||||')[0]
+    var db_tables = db_data.split('|||||||')
+    var first_table_data = db_tables[1].split('||||')
+    var table_listings = document.getElementById('tables_list')
+    var table_data_table = document.getElementById('table_data_table')
+    var table_data_table_columns = document.getElementById('table_data_table_columns')
+    document.getElementById('db_name').innerText = db_name
+    document.getElementById('db_name_title').innerText = db_name + " Tables"
+    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
 
-function confirm_action(fnc, param1, param2, param3, param4, param5) {
-    var new_div = document.createElement('div');
-new_div.id = "action_confirmation_div"
-    new_div.style = "position: fixed; top: 20%; left: 40%; width: 300px; height: 200px; background-color: #D3D3D3; border-style: solid;"
-    document.body.appendChild(new_div);
-var new_title = document.createElement('h2')
-var new_confirmation = document.createElement('p')
-var new_yes = document.createElement('img')
-var new_no = document.createElement('img')
-new_div.appendChild(new_title)
-new_title.innerText = 'Confirm Action'
-new_title.style = "text-align: center;"
-new_div.appendChild(new_confirmation)
-new_confirmation.innerText = fnc+'('+param1+', '+param2+', '+param3+', '+param4+', '+param5+')'
-new_confirmation.style = "text-align: center; background-color: white; font-weight: bold;"
-new_div.appendChild(new_yes)
-new_yes.style = "position: absolute; top: 130px; left: 20%;"
-new_yes.classList.add("accept_confirmation")
-new_yes.src = 'assets/images/sprites/checkmark_circle_green.png'
-new_div.appendChild(new_no)
-new_no.style = "position: absolute; top: 130px; left: 60%;"
-new_no.classList.add("deny_confirmation")
-new_no.src = 'assets/images/sprites/x_circle_red.png'
-new_yes.addEventListener('click', function(){
-        var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
-        window[fnc](param1, param2, param3, param4, param5);
-    });
-new_no.addEventListener('click', function(){
-        var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
-    });
-}
+    function confirm_action(fnc, param1, param2, param3, param4, param5) {
+        var new_div = document.createElement('div');
+        new_div.id = "action_confirmation_div"
+        new_div.style = "position: fixed; top: 20%; left: 40%; width: 300px; height: 200px; background-color: #D3D3D3; border-style: solid;"
+        document.body.appendChild(new_div);
+        var new_title = document.createElement('h2')
+        var new_confirmation = document.createElement('p')
+        var new_yes = document.createElement('img')
+        var new_no = document.createElement('img')
+        new_div.appendChild(new_title)
+        new_title.innerText = 'Confirm Action'
+        new_title.style = "text-align: center;"
+        new_div.appendChild(new_confirmation)
+        new_confirmation.innerText = fnc + '(' + param1 + ', ' + param2 + ', ' + param3 + ', ' + param4 + ', ' + param5 + ')'
+        new_confirmation.style = "text-align: center; background-color: white; font-weight: bold;"
+        new_div.appendChild(new_yes)
+        new_yes.style = "position: absolute; top: 130px; left: 20%;"
+        new_yes.classList.add("accept_confirmation")
+        new_yes.src = 'assets/images/sprites/checkmark_circle_green.png'
+        new_div.appendChild(new_no)
+        new_no.style = "position: absolute; top: 130px; left: 60%;"
+        new_no.classList.add("deny_confirmation")
+        new_no.src = 'assets/images/sprites/x_circle_red.png'
+        new_yes.addEventListener('click', function () {
+            var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
+            window[fnc](param1, param2, param3, param4, param5);
+        });
+        new_no.addEventListener('click', function () {
+            var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
+        });
+    }
 
-function configure_table(table) {
-    document.getElementById('configure_div_title').innerText = 'Configure '+table
-}
+    function configure_table(table) {
+        document.getElementById('configure_div_title').innerText = 'Configure ' + table
+    }
 
-function remove_table(table) {
-    alert('deleting table')
-}
+    function remove_table(table) {
+        alert('deleting table')
+    }
 
-// tables
-function init_tables() {
-for (var i = 1; i < db_tables.length; i++) {
-    var table_name = db_tables[i].split('||||')[0]
-    var table_listing = document.createElement("li")
-    table_listings.appendChild(table_listing)
-    table_listing.innerHTML = "<p onclick='' class='table_listing_text'>"+table_name+"</p>"
-    var new_configure_img = document.createElement('img')
-    var new_remove_img = document.createElement('img')
-    new_configure_img.alt = "Edit"
-    new_remove_img.alt = "Remove"
-    new_configure_img.src = "assets/images/sprites/cog_gray_1.png"
-    new_remove_img.src = "assets/images/sprites/cross_circle_red.png"
-    new_configure_img.width = "15"
-    new_configure_img.height = "15"
-    new_remove_img.width = "15"
-    new_remove_img.height = "15"
-    new_configure_img.classList.add('configure_table')
-    new_remove_img.classList.add('remove_table')
-    table_listing.prepend(new_remove_img)
-    table_listing.prepend(new_configure_img)
-    new_configure_img.addEventListener('click', function(){
-        configure_table(table_name);
-    });
-    new_remove_img.addEventListener('click', function(){
-        confirm_action("remove_table");
-    });
-}
-}
-// columns
-function init_columns() {
-for (var i = 0; i < first_table_data[1].split('///////')[0].split('|||').length; i++) {	
-    var row_data = first_table_data[1].split('///////')[0].split('|||')[i]
-    var new_row = document.createElement('th')
-    new_row.innerText = row_data.split('||')[1]
-    table_data_table_columns.appendChild(new_row)
-}
-}
-// rows
-function init_rows() {
-for (var i = 0; i < first_table_data[1].split('///////')[1].split('|||').length; i++) {	
-var row_data = first_table_data[1].split('///////')[1].split('|||')[i].split('||')
-var new_row = document.createElement('tr')
-for (var i2 = 0; i2 < first_table_data[1].split('///////')[1].split('|||')[i].split('||').length; i2++){
-   var new_column = document.createElement('td')
-   new_column.innerText = row_data[i2]
-   table_data_table.appendChild(new_row)
-   new_row.appendChild(new_column)
-}
-}
-}
+    // tables
+    function init_tables() {
+        for (var i = 1; i < db_tables.length; i++) {
+            var table_name = db_tables[i].split('||||')[0]
+            var table_listing = document.createElement("li")
+            table_listings.appendChild(table_listing)
+            table_listing.innerHTML = "<p onclick='' class='table_listing_text'>" + table_name + "</p>"
+            var new_configure_img = document.createElement('img')
+            new_configure_img.setAttribute('table_name', table_name)
+            new_configure_img.setAttribute('onclick', 'configure_table(this.getAttribute("table_name"));')
+            var new_remove_img = document.createElement('img')
+            new_remove_img.setAttribute('table_name', table_name)
+            new_remove_img.setAttribute('onclick', 'confirm_action("remove_table", this.getAttribute("table_name"));')
+            new_configure_img.alt = "Edit"
+            new_remove_img.alt = "Remove"
+            new_configure_img.src = "assets/images/sprites/cog_gray_1.png"
+            new_remove_img.src = "assets/images/sprites/cross_circle_red.png"
+            new_configure_img.width = "15"
+            new_configure_img.height = "15"
+            new_remove_img.width = "15"
+            new_remove_img.height = "15"
+            new_configure_img.classList.add('configure_table')
+            new_remove_img.classList.add('remove_table')
+            table_listing.prepend(new_remove_img)
+            table_listing.prepend(new_configure_img)
+        }
+    }
+    // columns
+    function init_columns() {
+        for (var i = 0; i < first_table_data[1].split('///////')[0].split('|||').length; i++) {
+            var row_data = first_table_data[1].split('///////')[0].split('|||')[i]
+            var new_row = document.createElement('th')
+            new_row.innerText = row_data.split('||')[1]
+            table_data_table_columns.appendChild(new_row)
+        }
+    }
+    // rows
+    function init_rows() {
+        for (var i = 0; i < first_table_data[1].split('///////')[1].split('|||').length; i++) {
+            var row_data = first_table_data[1].split('///////')[1].split('|||')[i].split('||')
+            var new_row = document.createElement('tr')
+            for (var i2 = 0; i2 < first_table_data[1].split('///////')[1].split('|||')[i].split('||').length; i2++) {
+                var new_column = document.createElement('td')
+                new_column.innerText = row_data[i2]
+                table_data_table.appendChild(new_row)
+                new_row.appendChild(new_column)
+            }
+        }
+    }
 
-init_tables()
-init_columns()
-init_rows()
+    init_tables()
+    init_columns()
+    init_rows()
 </script>
+
 </html>
