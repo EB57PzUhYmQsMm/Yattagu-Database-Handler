@@ -1,17 +1,55 @@
 <html>
-  <header>
+  <head>
     <title>YTG-DB</title>
     <link rel="stylesheet" type="text/css" href="css/style.css"></link>
+    <script type="text/javascript" src="js/db_scripts/db_handler.js"></script>
     <style>
     th {
         background-color: #808080;
         color: black;
     }
+
     td {
         background-color: white;
     }
+
+    .configure_table {
+        position: relative;
+        top: 0px;
+        left: 0px;
+    }
+
+    .configure_table:hover {
+        font-weight: bold;
+        width: 1.01em;
+        height: 1.01em;
+    }
+
+    .remove_table {
+        position: relative;
+        top: 0px;
+        left: 3px;
+    }
+    
+    .remove_table:hover {
+        font-weight: bold;
+        width: 1.01em;
+        height: 1.01em;
+    }
+
+    .table_listing_text {
+        position: relative;
+        top: -33px;
+        left: 40px;
+    }
+    
+    .table_listing_text:hover {
+        font-weight: bold;
+    }
+
+    .table_listing {}
     </style>
-  </header>
+  </head>
   <body>
     <h2 id="db_name" style="text-align: center;">Database Name</h2>
     <br>
@@ -23,7 +61,7 @@
 </tr>
 </table>
 </div>
-<div id="table_data_settings_div" style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 style="text-align: center;">Configure Row</h2></div>
+<div id="table_data_settings_div" style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;"><h2 id="configure_div_title" style="text-align: center;">Configure</h2></div>
 </div>
     <br>
     <br>
@@ -34,28 +72,63 @@ var url = new URL(window.location.href);
 var db_data = url.searchParams.get("db_data");
 
 var db_name = db_data.split('|||||||')[0]
-var db_tables = db_data.split('|||||||')[1].split('||||||')
-var first_table_data = db_tables[0].split('||||')
+var db_tables = db_data.split('|||||||')
+var first_table_data = db_tables[1].split('||||')
 var table_listings = document.getElementById('tables_list')
 var table_data_table = document.getElementById('table_data_table')
 var table_data_table_columns = document.getElementById('table_data_table_columns')
 document.getElementById('db_name').innerText = db_name
 document.getElementById('db_name_title').innerText = db_name+" Tables"
 document.getElementById('table_name_title').innerText = first_table_data[0]+" Data"
-for (var i = 0; i < db_tables.length; i++) {
+
+function configure_table(table) {
+    document.getElementById('configure_div_title').innerText = 'Configure '+table
+}
+
+function remove_table() {
+    console.log('test')
+}
+
+// tables
+function init_tables() {
+for (var i = 1; i < db_tables.length; i++) {
     var table_name = db_tables[i].split('||||')[0]
     var table_listing = document.createElement("li")
     table_listings.appendChild(table_listing)
-    table_listing.innerHTML = "<p onclick=''>"+table_name+"</p>"
+    table_listing.innerHTML = "<p onclick='' class='table_listing_text'>"+table_name+"</p>"
+    var new_configure_img = document.createElement('img')
+    var new_remove_img = document.createElement('img')
+    new_configure_img.alt = "Edit"
+    new_remove_img.alt = "Remove"
+    new_configure_img.src = "assets/images/sprites/cog_gray_1.png"
+    new_remove_img.src = "assets/images/sprites/cross_circle_red.png"
+    new_configure_img.width = "15"
+    new_configure_img.height = "15"
+    new_remove_img.width = "15"
+    new_remove_img.height = "15"
+    new_configure_img.classList.add('configure_table')
+    new_remove_img.classList.add('remove_table')
+    table_listing.prepend(new_remove_img)
+    table_listing.prepend(new_configure_img)
+    new_configure_img.addEventListener('click', function(){
+        configure_table(table_name);
+    });
+    new_remove_img.addEventListener('click', function(){
+        remove_table();
+    });
+}
 }
 // columns
+function init_columns() {
 for (var i = 0; i < first_table_data[1].split('///////')[0].split('|||').length; i++) {	
     var row_data = first_table_data[1].split('///////')[0].split('|||')[i]
     var new_row = document.createElement('th')
     new_row.innerText = row_data.split('||')[1]
     table_data_table_columns.appendChild(new_row)
 }
+}
 // rows
+function init_rows() {
 for (var i = 0; i < first_table_data[1].split('///////')[1].split('|||').length; i++) {	
 var row_data = first_table_data[1].split('///////')[1].split('|||')[i].split('||')
 var new_row = document.createElement('tr')
@@ -66,5 +139,10 @@ for (var i2 = 0; i2 < first_table_data[1].split('///////')[1].split('|||')[i].sp
    new_row.appendChild(new_column)
 }
 }
+}
+
+init_tables()
+init_columns()
+init_rows()
 </script>
 </html>
