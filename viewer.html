@@ -76,22 +76,23 @@
 <body>
     <h2 id="db_name" style="text-align: center;">Database Name</h2>
     <br>
-    <div id="main" style="position: absolute; top: 0px; left: 0px; height: 1000px; overflow: none;">
+    <div id="main" style="position: absolute; top: 0px; left: 0%; height: 1000px; overflow: none;">
         <div id="tables_div"
-            style="position: absolute; top: 150px; left: 00px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            style="position: absolute; top: 50px; left: 0px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;">
             <h2 id="db_name_title" style="text-align: center;">Database Tables</h2>
             <ul id="tables_list"></ul>
         </div>
         <div id="table_data_div"
-            style="position: absolute; top: 150px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            style="position: absolute; top: 50px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;">
             <h2 id="table_name_title" style="text-align: center;">Table_Name Data</h2>
             <table id="table_data_table" style="width: 100%;">
                 <tr id="table_data_table_columns">
                 </tr>
+                <tbody id="table_data_table_rows"></tbody>
             </table>
         </div>
         <div id="table_data_settings_div"
-            style="position: absolute; top: 150px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+            style="position: absolute; top: 50px; left: 1000px; width: 365px; height: 800px; overflow: auto; background-color: #D3D3D3;">
             <h2 id="configure_div_title" style="text-align: center;">Configure</h2>
         </div>
     </div>
@@ -100,6 +101,11 @@
     <footer></footer>
 </body>
 <script>
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
+}
     var url = new URL(window.location.href);
     var db_data = url.searchParams.get("db_data");
 
@@ -109,6 +115,7 @@
     var table_listings = document.getElementById('tables_list')
     var table_data_table = document.getElementById('table_data_table')
     var table_data_table_columns = document.getElementById('table_data_table_columns')
+    var table_data_table_rows = document.getElementById('table_data_table_rows')
     document.getElementById('db_name').innerText = db_name
     document.getElementById('db_name_title').innerText = db_name + " Tables"
     document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
@@ -145,17 +152,12 @@
         });
     }
 
-    function configure_table(table) {
-        document.getElementById('configure_div_title').innerText = 'Configure ' + table
-    }
-
-    function remove_table(table) {
-        alert('deleting table')
-    }
-
     // tables
     function init_tables() {
+removeAllChildNodes(table_listings)
+if (db_tables[1] !== '') {
         for (var i = 1; i < db_tables.length; i++) {
+
             var table_name = db_tables[i].split('||||')[0]
             var table_listing = document.createElement("li")
             table_listings.appendChild(table_listing)
@@ -165,7 +167,7 @@
             new_configure_img.setAttribute('onclick', 'configure_table(this.getAttribute("table_name"));')
             var new_remove_img = document.createElement('img')
             new_remove_img.setAttribute('table_name', table_name)
-            new_remove_img.setAttribute('onclick', 'confirm_action("remove_table", this.getAttribute("table_name"));')
+            new_remove_img.setAttribute('onclick', 'confirm_action("remove_table", db_data, this.getAttribute("table_name"));')
             new_configure_img.alt = "Edit"
             new_remove_img.alt = "Remove"
             new_configure_img.src = "assets/images/sprites/cog_gray_1.png"
@@ -180,8 +182,11 @@
             table_listing.prepend(new_configure_img)
         }
     }
+}
     // columns
     function init_columns() {
+removeAllChildNodes(table_data_table_columns)
+if (db_tables[1] !== '') {
         for (var i = 0; i < first_table_data[1].split('///////')[0].split('|||').length; i++) {
             var row_data = first_table_data[1].split('///////')[0].split('|||')[i]
             var new_row = document.createElement('th')
@@ -189,23 +194,46 @@
             table_data_table_columns.appendChild(new_row)
         }
     }
+}
     // rows
     function init_rows() {
+removeAllChildNodes(table_data_table_rows)
+if (db_tables[1] !== '') {
         for (var i = 0; i < first_table_data[1].split('///////')[1].split('|||').length; i++) {
             var row_data = first_table_data[1].split('///////')[1].split('|||')[i].split('||')
             var new_row = document.createElement('tr')
             for (var i2 = 0; i2 < first_table_data[1].split('///////')[1].split('|||')[i].split('||').length; i2++) {
                 var new_column = document.createElement('td')
                 new_column.innerText = row_data[i2]
-                table_data_table.appendChild(new_row)
+                table_data_table_rows.appendChild(new_row)
                 new_row.appendChild(new_column)
             }
         }
     }
+}
+function configure_table(table) {
+        document.getElementById('configure_div_title').innerText = 'Configure ' + table
+    }
 
+    function remove_table(db, table) {
+        alert('deleting '+table)
+	db_data = db_name+'|||||||'+delete_table(db, table)
+db_tables = db_data.split('|||||||')
+    first_table_data = db_tables[1].split('||||')
+    table_listings = document.getElementById('tables_list')
+    table_data_table = document.getElementById('table_data_table')
+    table_data_table_columns = document.getElementById('table_data_table_columns')
+    document.getElementById('db_name').innerText = db_name
+    document.getElementById('db_name_title').innerText = db_name + " Tables"
+    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
+init_tables()
+init_columns()
+init_rows()
+    }
     init_tables()
     init_columns()
     init_rows()
+
 </script>
 
 </html>

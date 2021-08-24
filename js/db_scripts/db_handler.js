@@ -1,3 +1,16 @@
+function replaceLast(find, replace, string) {
+    var lastIndex = string.lastIndexOf(find);
+    
+    if (lastIndex === -1) {
+        return string;
+    }
+    
+    var beginString = string.substring(0, lastIndex);
+    var endString = string.substring(lastIndex + find.length);
+    
+    return beginString + replace + endString;
+}
+
 /*
 * FileSaver.js
 * A saveAs() FileSaver implementation.
@@ -183,4 +196,21 @@ function update_table(db, table){}
 function update_row(db, table){}
 function update_column(db, table){}
 function query_table(db, table){}
-function delete_table(db, table){}
+function delete_table(db, table) {
+var tables = db.split('|||||||')
+for (var i = 1; i < tables.length; i++) {
+if (tables[i].split('||||')[0] == table) {
+delete tables[i]
+}
+}
+
+var new_tables = ''
+for (var i = 1; i < tables.length; i++) {
+if (tables[i] !== '') {  
+new_tables = new_tables+tables[i]+'|||||||'
+}
+}
+new_tables = new_tables.replaceAll('undefined|||||||', '')
+new_tables = replaceLast('|||||||', '', new_tables)
+return new_tables
+}
