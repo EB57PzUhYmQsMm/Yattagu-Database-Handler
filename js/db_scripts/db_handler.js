@@ -196,6 +196,24 @@ function update_table(db, table){}
 function update_row(db, table){}
 function update_column(db, table){}
 function query_table(db, table){}
+function create_table(name, db) {
+var tables = db.split('|||||||')
+var db_name = tables[0]
+for (var i = 1; i < tables.length; i++) {
+if (tables[i].split('||||')[0] == db_name) {
+delete tables[i]
+}
+}
+var new_tables = 'new_table||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false|||||||'
+for (var i = 1; i < tables.length; i++) {
+if (tables[i] !== '') {  
+new_tables = new_tables+tables[i]+'|||||||'
+}
+}
+new_tables = new_tables.replaceAll('undefined|||||||', '')
+new_tables = replaceLast('|||||||', '', new_tables)
+return(new_tables)
+}
 function delete_table(db, table) {
 var tables = db.split('|||||||')
 for (var i = 1; i < tables.length; i++) {
@@ -203,7 +221,6 @@ if (tables[i].split('||||')[0] == table) {
 delete tables[i]
 }
 }
-
 var new_tables = ''
 for (var i = 1; i < tables.length; i++) {
 if (tables[i] !== '') {  

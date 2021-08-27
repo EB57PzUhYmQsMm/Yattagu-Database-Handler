@@ -27,6 +27,18 @@
             height: 1.01em;
         }
 
+	.add_table {
+            position: absolute;
+            top: 60px;
+            left: 25px;
+        }
+
+        .add_table:hover {
+            font-weight: bold;
+            width: 2em;
+            height: 2em;
+        }
+
         .remove_table {
             position: relative;
             top: 0px;
@@ -77,10 +89,10 @@
     <h2 id="db_name" style="text-align: center;">Database Name</h2>
     <br>
     <div id="main" style="position: absolute; top: 0px; left: 0%; height: 1000px; overflow: none;">
-        <div id="tables_div"
-            style="position: absolute; top: 50px; left: 0px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;">
+        <div id="tables_div" style="position: absolute; top: 50px; left: 0px; width: 300px; height: 800px; overflow: auto; background-color: #D3D3D3;">
             <h2 id="db_name_title" style="text-align: center;">Database Tables</h2>
-            <ul id="tables_list"></ul>
+            <div><img width="25" height="25" id="create_table_button" class="add_table" src="assets/images/icons/plus.png" alt="Create New Table"></img></div>
+            <ul id="tables_list" style="position: absolute; top: 100px;"></ul>
         </div>
         <div id="table_data_div"
             style="position: absolute; top: 50px; left: 325px; width: 650px; height: 800px; overflow: auto; background-color: #D3D3D3;">
@@ -123,7 +135,7 @@ function removeAllChildNodes(parent) {
     function confirm_action(fnc, param1, param2, param3, param4, param5) {
         var new_div = document.createElement('div');
         new_div.id = "action_confirmation_div"
-        new_div.style = "position: fixed; top: 20%; left: 40%; width: 300px; height: 200px; background-color: #D3D3D3; border-style: solid;"
+        new_div.style = "position: fixed; top: 20%; left: 40%; width: 300px; height: 225px; background-color: #D3D3D3; border-style: solid; overflow: hidden;"
         document.body.appendChild(new_div);
         var new_title = document.createElement('h2')
         var new_confirmation = document.createElement('p')
@@ -133,16 +145,24 @@ function removeAllChildNodes(parent) {
         new_title.innerText = 'Confirm Action'
         new_title.style = "text-align: center;"
         new_div.appendChild(new_confirmation)
-        new_confirmation.innerText = fnc + '(' + param1 + ', ' + param2 + ', ' + param3 + ', ' + param4 + ', ' + param5 + ')'
+function checkDefined(val, act) {
+if (val == 'undefined') {
+return('')
+} else {
+console.log("christina was here")
+return(act)
+}
+}
+        new_confirmation.innerText = fnc + '(' + checkDefined(param1, param1) + checkDefined(param2, ', ' + param2) + checkDefined(param3, ', ' + param3) + checkDefined(param4, ', ' + param4)  + checkDefined(param5, ', ' + param5) + ')'
         new_confirmation.style = "text-align: center; background-color: white; font-weight: bold;"
         new_div.appendChild(new_yes)
-        new_yes.style = "position: absolute; top: 130px; left: 20%;"
+        new_yes.style = "position: absolute; top: 165px; left: 20%;"
         new_yes.classList.add("accept_confirmation")
-        new_yes.src = 'assets/images/sprites/checkmark_circle_green.png'
+        new_yes.src = 'assets/images/icons/checkmark_circle_green.png'
         new_div.appendChild(new_no)
-        new_no.style = "position: absolute; top: 130px; left: 60%;"
+        new_no.style = "position: absolute; top: 165px; left: 60%;"
         new_no.classList.add("deny_confirmation")
-        new_no.src = 'assets/images/sprites/x_circle_red.png'
+        new_no.src = 'assets/images/icons/x_circle_red.png'
         new_yes.addEventListener('click', function () {
             var element = document.getElementById('action_confirmation_div'); element.parentNode.removeChild(element);
             window[fnc](param1, param2, param3, param4, param5);
@@ -157,7 +177,6 @@ function removeAllChildNodes(parent) {
 removeAllChildNodes(table_listings)
 if (db_tables[1] !== '') {
         for (var i = 1; i < db_tables.length; i++) {
-
             var table_name = db_tables[i].split('||||')[0]
             var table_listing = document.createElement("li")
             table_listings.appendChild(table_listing)
@@ -167,11 +186,11 @@ if (db_tables[1] !== '') {
             new_configure_img.setAttribute('onclick', 'configure_table(this.getAttribute("table_name"));')
             var new_remove_img = document.createElement('img')
             new_remove_img.setAttribute('table_name', table_name)
-            new_remove_img.setAttribute('onclick', 'confirm_action("remove_table", db_data, this.getAttribute("table_name"));')
+            new_remove_img.setAttribute('onclick', 'confirm_action("remove_table", this.getAttribute("table_name"), db_data);')
             new_configure_img.alt = "Edit"
             new_remove_img.alt = "Remove"
-            new_configure_img.src = "assets/images/sprites/cog_gray_1.png"
-            new_remove_img.src = "assets/images/sprites/cross_circle_red.png"
+            new_configure_img.src = "assets/images/icons/cog_gray_1.png"
+            new_remove_img.src = "assets/images/icons/cross_circle_red.png"
             new_configure_img.width = "15"
             new_configure_img.height = "15"
             new_remove_img.width = "15"
@@ -214,11 +233,25 @@ if (db_tables[1] !== '') {
 function configure_table(table) {
         document.getElementById('configure_div_title').innerText = 'Configure ' + table
     }
-
-    function remove_table(db, table) {
+    function remove_table(table, db) {
         alert('deleting '+table)
 	db_data = db_name+'|||||||'+delete_table(db, table)
-db_tables = db_data.split('|||||||')
+	db_tables = db_data.split('|||||||')
+    first_table_data = db_tables[1].split('||||')
+    table_listings = document.getElementById('tables_list')
+    table_data_table = document.getElementById('table_data_table')
+    table_data_table_columns = document.getElementById('table_data_table_columns')
+    document.getElementById('db_name').innerText = db_name
+    document.getElementById('db_name_title').innerText = db_name + " Tables"
+    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
+init_tables()
+init_columns()
+init_rows()
+    }
+function add_table(name, db) {
+	db_data = db_name+'|||||||'+create_table(db, name)
+console.log(db_data)
+	db_tables = db_data.split('|||||||')
     first_table_data = db_tables[1].split('||||')
     table_listings = document.getElementById('tables_list')
     table_data_table = document.getElementById('table_data_table')
@@ -233,7 +266,9 @@ init_rows()
     init_tables()
     init_columns()
     init_rows()
-
+document.getElementById('create_table_button').addEventListener('click', function () {
+            add_table(db_data, 'new_table')
+        });
 </script>
 
 </html>
