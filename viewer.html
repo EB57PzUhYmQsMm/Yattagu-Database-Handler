@@ -248,20 +248,28 @@ init_tables()
 init_columns()
 init_rows()
     }
-function add_table(name, db) {
-	db_data = db_name+'|||||||'+create_table(db, name)
-console.log(db_data)
-	db_tables = db_data.split('|||||||')
-    first_table_data = db_tables[1].split('||||')
-    table_listings = document.getElementById('tables_list')
-    table_data_table = document.getElementById('table_data_table')
-    table_data_table_columns = document.getElementById('table_data_table_columns')
-    document.getElementById('db_name').innerText = db_name
-    document.getElementById('db_name_title').innerText = db_name + " Tables"
-    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
+function add_table(db) {
+var name = prompt('Input new table name', 'new_table_xx')
+if (name == null || name == "") {
+alert('Invalid table_name Entry')
+return('invalid_entry_ytgdberror')
+}
+if (query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('/////')[0] !== 'false'){
+alert(query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('/////')[1])
+}else{
+db_data = db_name+'|||||||'+create_table(db, name)
+db_tables = db_data.split('|||||||')
+first_table_data = db_tables[1].split('||||')
+table_listings = document.getElementById('tables_list')
+table_data_table = document.getElementById('table_data_table')
+table_data_table_columns = document.getElementById('table_data_table_columns')
+document.getElementById('db_name').innerText = db_name
+document.getElementById('db_name_title').innerText = db_name + " Tables"
+document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
 init_tables()
 init_columns()
 init_rows()
+}
     }
     init_tables()
     init_columns()

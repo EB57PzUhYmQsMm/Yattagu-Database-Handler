@@ -185,18 +185,24 @@ if (typeof module !== 'undefined') {
 
 var template_blob = "|||||||sample_table||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false|||||||sample_table2||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false"
 
-function create_db(dbname) {
-  var blob = new Blob([dbname+template_blob],
-    { type: "text/plain;charset=utf-8" });
-            saveAs(blob, dbname+".txt");
-}
+//function create_db(dbname) {
+//  var blob = new Blob([dbname+template_blob],
+//    { type: "text/plain;charset=utf-8" });
+//            saveAs(blob, dbname+".txt");
+//}
 
 function save_db(db, location){}
 function update_table(db, table){}
 function update_row(db, table){}
 function update_column(db, table){}
-function query_table(db, table){}
-function create_table(name, db) {
+function query_table(db, table, query_statement){}
+function query_db(db, query_statement){
+var tables = db.split('|||||||')
+var db_name = tables[0]
+var q_s = query_statement.split(' ')
+if (q_s[0] == 'SELECT' && q_s[1] == '*') {var tbs = []; var wtq=null; var rtr=null; if(q_s[3] == 'c_database'){wtq=tables; delete wtq[0];}; if(q_s[4] == 'WHERE'){for (var i = 1; i < wtq.length; i++){if(tables[i].split('||||')[0] == q_s[5].split('table_name')[1].split("'")[1]){return('true/////table already exists')}else{return('false/////table does not exist')}}}}
+}
+function create_table(db, name) {
 var tables = db.split('|||||||')
 var db_name = tables[0]
 for (var i = 1; i < tables.length; i++) {
@@ -204,7 +210,7 @@ if (tables[i].split('||||')[0] == db_name) {
 delete tables[i]
 }
 }
-var new_tables = 'new_table||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false|||||||'
+var new_tables = name+'||||1||id||int||120|||2||silly_string||string||3600|||3||chad_level||int||120|||4||is_cool||bool||0///////1||gamer||69||true|||2||ninja||[nil]||false|||||||'
 for (var i = 1; i < tables.length; i++) {
 if (tables[i] !== '') {  
 new_tables = new_tables+tables[i]+'|||||||'
