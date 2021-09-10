@@ -2,9 +2,23 @@
 
 <head>
     <title>YTG-DB</title>
+    <script type="text/javascript" src="js/db_scripts/db_handler.js"></script>
+    <script>
+        var url = new URL(window.location.href);
+        var db_data = url.searchParams.get("db_data");
+	window.addEventListener("beforeunload", function (e) {
+	if(has_saved == false){
+	    	var confirmationMessage = 'It looks like you have been editing something. '+ 'If you leave before saving, your changes will be lost.';
+    	    	(e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    	    	return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+	    }
+	});
+        //check if legitimate database to avoid console errors because console errors eww
+        //will add the above mentioned code later
+        if(db_data == '' || db_data == null){window.location='index.html'}
+    </script>
     <link rel="stylesheet" type="text/css" href="css/style.css">
     </link>
-    <script type="text/javascript" src="js/db_scripts/db_handler.js"></script>
     <style>
         th {
             background-color: #808080;
@@ -118,8 +132,6 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
-    var url = new URL(window.location.href);
-    var db_data = url.searchParams.get("db_data");
 
     var db_name = db_data.split('|||||||')[0]
     var db_tables = db_data.split('|||||||')
@@ -132,6 +144,16 @@ function removeAllChildNodes(parent) {
     document.getElementById('db_name_title').innerText = db_name + " Tables"
     document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
 
+    function load_table(table) {
+    var first_table_data = table.split('?????')[2].split('||||')
+    var table_listings = document.getElementById('tables_list')
+    var table_data_table = document.getElementById('table_data_table')
+    var table_data_table_columns = document.getElementById('table_data_table_columns')
+    var table_data_table_rows = document.getElementById('table_data_table_rows')
+    document.getElementById('db_name').innerText = db_name
+    document.getElementById('db_name_title').innerText = db_name + " Tables"
+    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
+}
     function confirm_action(fnc, param1, param2, param3, param4, param5) {
         var new_div = document.createElement('div');
         new_div.id = "action_confirmation_div"
@@ -180,7 +202,12 @@ if (db_tables[1] !== '') {
             var table_name = db_tables[i].split('||||')[0]
             var table_listing = document.createElement("li")
             table_listings.appendChild(table_listing)
-            table_listing.innerHTML = "<p onclick='' class='table_listing_text'>" + table_name + "</p>"
+            var new_p = document.createElement('p')
+	    new_p.setAttribute('table_name', table_name)
+            new_p.setAttribute('onclick', `load_table(query_db(db_data, "SELECT * FROM c_database WHERE table_name='`+table_name+`'"))`)
+	    new_p.classList.add("table_listing_text")
+	    new_p.innerText = table_name
+	    table_listing.appendChild(new_p)
             var new_configure_img = document.createElement('img')
             new_configure_img.setAttribute('table_name', table_name)
             new_configure_img.setAttribute('onclick', 'configure_table(this.getAttribute("table_name"));')
@@ -254,8 +281,8 @@ if (name == null || name == "") {
 alert('Invalid table_name Entry')
 return('invalid_entry_ytgdberror')
 }
-if (query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('/////')[0] !== 'false'){
-alert(query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('/////')[1])
+if(query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('?????')[0] == 'true'){
+alert('create_table(query_db) ERROR: '+query_db(db_data, "SELECT * FROM c_database WHERE table_name='"+name+"'").split('?????')[1])
 }else{
 db_data = db_name+'|||||||'+create_table(db, name)
 db_tables = db_data.split('|||||||')

@@ -1,3 +1,4 @@
+var has_saved = true;
 function replaceLast(find, replace, string) {
     var lastIndex = string.lastIndexOf(find);
     
@@ -193,16 +194,22 @@ var template_blob = "|||||||sample_table||||1||id||int||120|||2||silly_string||s
 
 function save_db(db, location){}
 function update_table(db, table){}
-function update_row(db, table){}
-function update_column(db, table){}
-function query_table(db, table, query_statement){}
+function update_row(db, table, row){
+var tables = db.split('|||||||')
+var db_name = tables[0]
+var table = tables[indexOf('table')]
+}
+function update_column(db, table, column){has_saved = false;}
+function query_table(db, table, query_statement){has_saved = false;}
 function query_db(db, query_statement){
+has_saved = false;
 var tables = db.split('|||||||')
 var db_name = tables[0]
 var q_s = query_statement.split(' ')
-if (q_s[0] == 'SELECT' && q_s[1] == '*') {var tbs = []; var wtq=null; var rtr=null; if(q_s[3] == 'c_database'){wtq=tables; delete wtq[0];}; if(q_s[4] == 'WHERE'){for (var i = 1; i < wtq.length; i++){if(tables[i].split('||||')[0] == q_s[5].split('table_name')[1].split("'")[1]){return('true/////table already exists')}else{return('false/////table does not exist')}}}}
+if (q_s[0] == 'SELECT' && q_s[1] == '*') {var tbs = []; var wtq=null; var rtr=null; if(q_s[3] == 'c_database'){wtq=tables; delete wtq[0];}; if(q_s[4] == 'WHERE'){for (var i = 1; i < wtq.length; i++){if(tables[i].split('||||')[0] == q_s[5].split('table_name')[1].split("'")[1]){return('true?????table exists?????'+tables[i])}}return('false/////table does not exist')}}
 }
 function create_table(db, name) {
+has_saved = false;
 var tables = db.split('|||||||')
 var db_name = tables[0]
 for (var i = 1; i < tables.length; i++) {
@@ -221,6 +228,7 @@ new_tables = replaceLast('|||||||', '', new_tables)
 return(new_tables)
 }
 function delete_table(db, table) {
+has_saved = false;
 var tables = db.split('|||||||')
 for (var i = 1; i < tables.length; i++) {
 if (tables[i].split('||||')[0] == table) {
