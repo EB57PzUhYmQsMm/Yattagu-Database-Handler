@@ -6,6 +6,7 @@
     <script>
         var url = new URL(window.location.href);
         var db_data = url.searchParams.get("db_data");
+	var current_table = 1
 	window.addEventListener("beforeunload", function (e) {
 	if(has_saved == false){
 	    	var confirmationMessage = 'It looks like you have been editing something. '+ 'If you leave before saving, your changes will be lost.';
@@ -133,9 +134,64 @@ function removeAllChildNodes(parent) {
     }
 }
 
+function FindColPos(element) {
+    /* find column position */
+
+    var colPos = 0;
+    var prev = element.previousSibling;
+
+    while (prev) {
+        if (prev.nodeType == 1 && prev.nodeName.match(/t[dh]/i)) {
+            colPos++;
+        }
+        prev = prev.previousSibling;
+    }
+
+    return colPos;
+}
+
+function FindRowPos(element) {
+    /* find row position */
+
+    var rowPos = 0;
+    var prev = element.parentNode.previousSibling;
+
+    while (prev) {
+        if (prev.nodeType == 1 && prev.nodeName.match(/tr/i)) {
+            rowPos++;
+        }
+        prev = prev.previousSibling;
+    }
+
+    return rowPos;
+}
+
+function inputify(e) {
+    var new_input = document.createElement('input')
+    new_input.style = "width: 50;"
+    var table_data = current_table
+    var current_column = FindColPos(e)
+    var current_row = FindRowPos(e)
+    var current_pos = current_row+', '+current_column
+    var cnt_pos = current_pos.split(', ')
+    console.log(cnt_pos)
+    var thecolumns = table_data[1].split('///////')[0].split('|||')
+    var thevalues = table_data[1].split('///////')[1].split('|||')[cnt_pos[0]].split('||')
+    console.log(thevalues)
+    console.log(thevalues[cnt_pos[1]])
+console.log(thecolumns[cnt_pos[0+1]].split('||')[2])
+    if(thecolumns[cnt_pos[0+1]].split('||')[2]=="string"){new_input.type='text'}else if(thecolumns[cnt_pos[0+1]].split('||')[2]=="int"){new_input.type='number'}else{new_input.type='text'}
+    new_input.value = thevalues[cnt_pos[1]]
+    var childs = document.getElementById('table_data_table_rows').children
+    var childs2 = childs[cnt_pos[0]].children
+    var td = childs2[cnt_pos[1]]
+    td.innerText = ''
+    td.appendChild(new_input)
+}
     var db_name = db_data.split('|||||||')[0]
     var db_tables = db_data.split('|||||||')
     var first_table_data = db_tables[1].split('||||')
+    current_table = first_table_data
     var table_listings = document.getElementById('tables_list')
     var table_data_table = document.getElementById('table_data_table')
     var table_data_table_columns = document.getElementById('table_data_table_columns')
@@ -145,14 +201,36 @@ function removeAllChildNodes(parent) {
     document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
 
     function load_table(table) {
-    var first_table_data = table.split('?????')[2].split('||||')
-    var table_listings = document.getElementById('tables_list')
+    var first_table_data = table.split('?????')[2]
+    console.log(first_table_data)
+    current_table = first_table_data.split('||||')
     var table_data_table = document.getElementById('table_data_table')
     var table_data_table_columns = document.getElementById('table_data_table_columns')
     var table_data_table_rows = document.getElementById('table_data_table_rows')
+    removeAllChildNodes(table_data_table_columns)
+    for (var i = 1; i < first_table_data.split('///////')[0].split('|||').length; i++) {
+	var row_data = first_table_data.split('///////')[0].split('|||')[i]
+
+	var new_row = document.createElement('th')
+	new_row.innerText = row_data.split('||')[1]
+        table_data_table_columns.appendChild(new_row)
+    }
+removeAllChildNodes(table_data_table_rows)
+    for (var i = 0; i < first_table_data[1].split('///////')[1].split('|||').length; i++) {
+	var row_data = first_table_data.split('///////')[1].split('|||')[i]
+	console.log(first_table_data[1].split('///////')[1].split('|||')[i].split('||'))
+        var new_row = document.createElement('tr')
+        for (var i2 = 0; i2 < first_table_data[1].split('///////')[1].split('|||')[i].split('||').length; i2++) {
+	    var new_column = document.createElement('td')
+            new_column.innerText = row_data[i2]
+            table_data_table_rows.appendChild(new_row)
+            new_row.appendChild(new_column)
+	    new_column.setAttribute('ondblclick', "inputify(this);")
+        }
+    }
     document.getElementById('db_name').innerText = db_name
     document.getElementById('db_name_title').innerText = db_name + " Tables"
-    document.getElementById('table_name_title').innerText = first_table_data[0] + " Data"
+    document.getElementById('table_name_title').innerText = first_table_data.split('||||')[0] + " Data"
 }
     function confirm_action(fnc, param1, param2, param3, param4, param5) {
         var new_div = document.createElement('div');
@@ -253,6 +331,7 @@ if (db_tables[1] !== '') {
                 new_column.innerText = row_data[i2]
                 table_data_table_rows.appendChild(new_row)
                 new_row.appendChild(new_column)
+		new_column.setAttribute('ondblclick', "inputify(this);")
             }
         }
     }
